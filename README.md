@@ -5,3 +5,5 @@ C++ App with CMake, OpenCV and FFTW3 for fast fourier transform operations.
 Exercise Project
 
 Currently NOT working
+
+Private for the time being...
