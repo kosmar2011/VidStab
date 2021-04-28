@@ -30,6 +30,7 @@ INSTALL FFTW AFTER DOWNLOADING
 from http://www.fftw.org/fftw-3.3.9.tar.gz
 
 Run in fftw folder:
+cd lib/fftw
 ./configure
 make
 make install
