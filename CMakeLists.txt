@@ -9,11 +9,11 @@ find_package( OpenCV REQUIRED )
 
 #message("OpenCV_INCLUDE_DIRS: " ${OpenCV_INCLUDE_DIRS})
 #message("OpenCV_LIBS: " ${OpenCV_LIBS})
-
-include_directories( ${OpenCV_INCLUDE_DIRS})
-include_directories( fftw3 )
-
 add_executable( VidStab src/OLD-VidStab.cpp)
+
+target_include_directories( VidStab PUBLIC ${OpenCV_INCLUDE_DIRS})
+target_include_directories( VidStab PUBLIC fftw3 )
+
 # add_executable( VidStab src/VidStab.cpp)
 
 
