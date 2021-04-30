@@ -1,5 +1,6 @@
 #include <iostream>
-#include <math.h>
+// #include <math.h>
+#include <cmath>
 #include <chrono> 
 #include <vector> 
 
@@ -20,9 +21,8 @@ int main() {
     cv::VideoWriter writer;
     int codec = cv::VideoWriter::fourcc('M', 'P', '4', '2');  // MPEG4
     std::string filename = "../ifft.avi";
-    writer.open(filename, codec, cap.get(cv::CAP_PROP_FPS), frame.size(), true);
+    writer.open(filename, codec, cap.get(cv::CAP_PROP_FPS), frame.size() * 4, true);
     std::cout << cap.get(cv::CAP_PROP_FPS) << std::endl;
-
     if (!writer.isOpened()) {
         std::cout << "Could not open the output video for write.\n";
         return -1;
@@ -62,7 +62,7 @@ int main() {
             break;
         cv::Mat grayscale;
         cv::cvtColor(frame, grayscale, cv::COLOR_BGR2GRAY);
-        // std::cout << frame.size() << "\n";      
+        std::cout << frame.size() << "\n";      
 
         auto fft_in   = fftw_alloc_real(N);
         auto fft_out  = fftw_alloc_complex(N);
@@ -87,7 +87,7 @@ int main() {
         //RUN BACKWARD FFT COMPUTATION
         fftw_execute(plan_b);
 
-        auto img_ifft = cv::Mat(height, width, CV_8UC1);
+        auto img_ifft = cv::Mat(height, width, CV_32FC1);
         //normalize
         for (uint32_t i = 0; i < N; i++) {
             ifft_out[i] /= static_cast<double>(N);
@@ -99,16 +99,33 @@ int main() {
 
         fft_shift(img_ifft);
 
-        auto circ = cv::Mat(height, width, CV_8UC3, cv::Scalar(0, 0, 0));
+        auto circ = cv::Mat(height * 2, width * 2, CV_8UC3, cv::Scalar(0, 0, 0));
 
-        // cv::Point maxLoc;
-        // cv::minMaxLoc(img_ifft, NULL, NULL, NULL, &maxLoc);
-        // auto dx = maxLoc.x;
-        // auto dy = maxLoc.y;
-        // std::cout << "(" << dx << ", " << dy << ")\n";
+        double minVal; 
+        double maxVal; 
+        cv::Point minLoc; 
+        cv::Point maxLoc;
+        cv::minMaxLoc(img_ifft, &minVal, &maxVal, &minLoc, &maxLoc);
+        
 
+        auto dx = maxLoc.x;
+        auto dy = maxLoc.y;
+        std::cout << "(" << dx << ", " << dy << ")\n";
+        std::cout << "With value: " << maxVal << "\n";
+        //the distance of dx point from the center
+        dx = std::abs(dx - (short int)height/2);
+        dy = std::abs(dy - (short int) width/2);
+
+        for (auto i = dx; i < height + dx; i++) {
+            for (auto j = dy; j < width + dy; j++) {
+                circ.at<cv::Vec3b>(i, j)[0] = (short int)frame.at<cv::Vec3b>(i - dx, j - dy)[0];
+                circ.at<cv::Vec3b>(i, j)[1] = (short int)frame.at<cv::Vec3b>(i - dx, j - dy)[1];
+                circ.at<cv::Vec3b>(i, j)[2] = (short int)frame.at<cv::Vec3b>(i - dx, j - dy)[2];
+                // std::cout << "all good in: (" << i << ", " << j << ")\n";
+            }
+        }
+        std::cout << "good2\n";
         writer << circ;
-
 
         fftw_free(fft_in);
         fftw_free(fft_out);
