@@ -3,6 +3,6 @@ ifft.avi
 img.png
 scene2.mpg
 library_install_instructions.txt
-test_opencv.cpp
 /src/test_fftw.cpp
+/src/test_opencv.cpp
 /src/OLD-VidStab.cpp
