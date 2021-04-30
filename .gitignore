@@ -1,3 +1,5 @@
+.gitignore
+.git
 /build
 ifft.avi
 img.png
