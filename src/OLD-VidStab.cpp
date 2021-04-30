@@ -19,7 +19,7 @@ const uint16_t width = 640;
 const uint32_t N = height * width;
 
 
-inline void cross_power_spectrum(fftw_complex* in1, fftw_complex* in2, fftw_complex* pc) {
+void cross_power_spectrum(fftw_complex* in1, fftw_complex* in2, fftw_complex* pc) {
     for (uint32_t i = 0; i < 2 * N - 1; i++) {
         //complex multiplication
         double a = in1[i][0];
@@ -36,15 +36,14 @@ inline void cross_power_spectrum(fftw_complex* in1, fftw_complex* in2, fftw_comp
     }
 }
 
-inline void conj(fftw_complex* fft, fftw_complex* conj) {
+void conj(fftw_complex* fft, fftw_complex* conj) {
     for (uint32_t i = 0; i < 2 * N - 1; i++) {
         conj[i][0] = static_cast<double>(fft[i][0]);
         conj[i][1] = static_cast<double>(-fft[i][1]);
     }
 }
 
-//inline void fft(cv::Mat& img, double* data_in, fftw_complex* fft) {
-inline void fft(cv::Mat& img, double* data_in, fftw_complex* fft) {
+void fft(cv::Mat& img, double* data_in, fftw_complex* fft) {
     /*
     Input:
     img = the image we want to apply fft
@@ -76,7 +75,7 @@ inline void fft(cv::Mat& img, double* data_in, fftw_complex* fft) {
 
 
 //inline cv::Mat ifft(fftw_complex* fft, double* ifft) { 
-inline cv::Mat ifft(fftw_complex* fft, double* ifft) {
+cv::Mat ifft(fftw_complex* fft, double* ifft) {
     /*
     Input:
     img_fft = the fourier transformed image we want to apply inverse fft
