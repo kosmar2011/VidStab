@@ -89,12 +89,10 @@ int main() {
 
         auto img_ifft = cv::Mat(height, width, CV_32FC1);
         //normalize
+        double tmp;
         for (uint32_t i = 0; i < N; i++) {
-            ifft_out[i] /= static_cast<double>(N);
-        }
-        // convert ifft fftw_complex* to cv::Mat
-        for (uint32_t i = 0; i < N; i++) {
-            img_ifft.data[i] = static_cast<double>(ifft_out[i]);
+            tmp /= static_cast<double>(N);
+            img_ifft.data[i] = tmp;
         }
 
         fft_shift(img_ifft);
@@ -116,11 +114,11 @@ int main() {
         dx = std::abs(dx - (short int)height/2);
         dy = std::abs(dy - (short int) width/2);
 
-        for (auto i = dx; i < height + dx; i++) {
-            for (auto j = dy; j < width + dy; j++) {
-                circ.at<cv::Vec3b>(i, j)[0] = (short int)frame.at<cv::Vec3b>(i - dx, j - dy)[0];
-                circ.at<cv::Vec3b>(i, j)[1] = (short int)frame.at<cv::Vec3b>(i - dx, j - dy)[1];
-                circ.at<cv::Vec3b>(i, j)[2] = (short int)frame.at<cv::Vec3b>(i - dx, j - dy)[2];
+        for (auto i = dy; i < height + dy; i++) {
+            for (auto j = dx; j < width + dx; j++) {
+                circ.at<cv::Vec3b>(i, j)[0] = (short int)frame.at<cv::Vec3b>(i - dy, j - dx)[0];
+                circ.at<cv::Vec3b>(i, j)[1] = (short int)frame.at<cv::Vec3b>(i - dy, j - dx)[1];
+                circ.at<cv::Vec3b>(i, j)[2] = (short int)frame.at<cv::Vec3b>(i - dy, j - dx)[2];
                 // std::cout << "all good in: (" << i << ", " << j << ")\n";
             }
         }
