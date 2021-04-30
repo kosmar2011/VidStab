@@ -1,6 +1,7 @@
 
 #ifndef VIDSTAB_H
 #define VIDSTAB_H
+
 #include <fftw3.h>
 #include <opencv2/core.hpp>
 #include <opencv2/videoio.hpp>
