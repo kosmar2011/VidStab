@@ -34,18 +34,12 @@ void fft(cv::Mat& img, double* data_in, fftw_complex* fft) {
     img_fft = cv::Mat type image for fft contents/visualization
     */
 
-    // prepei na ginei padding me midenika!!!!!!!!!!!!!!!!!!
-    // prepei na ginei padding me midenika!!!!!!!!!!!!!!!!!!
-    // prepei na ginei padding me midenika!!!!!!!!!!!!!!!!!!
-    // prepei na ginei padding me midenika!!!!!!!!!!!!!!!!!!
-    // prepei na ginei padding me midenika!!!!!!!!!!!!!!!!!!
-
     fftw_plan plan_f = fftw_plan_dft_r2c_2d(height, width, data_in, fft, FFTW_ESTIMATE);
     //fftw_plan plan_f = fftw_plan_dft_2d(height, width, data_in, fft, FFTW_FORWARD, FFTW_ESTIMATE);
 
     //assign input image data to fftw_real* data_in
-    for (uint32_t i = 0; i < N; i++) {
-        data_in[i] = static_cast<double>(img.data[i]);
+    for (uint32_t i = 0; i < 2 * N - 1; i++) {
+        data_in[i] = (i >= N) ? 0 : static_cast<double>(img.data[i]);
     }
 
     fftw_execute(plan_f);
