@@ -1,6 +1,6 @@
 /build
-ifft.avi
-img.png
-scene2.mpg
+*.avi
+*.png
+*.mpg
 library_install_instructions.txt
 /src/drafts

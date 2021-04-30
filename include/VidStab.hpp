@@ -4,11 +4,6 @@
 
 #include <fftw3.h>
 #include <opencv2/core.hpp>
-#include <opencv2/videoio.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/core/types_c.h>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <fftw3.h>
 
 static const uint16_t height = 480;
 static const uint16_t width = 640;
