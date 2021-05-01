@@ -91,13 +91,13 @@ int main() {
         //normalize
         double tmp;
         for (uint32_t i = 0; i < N; i++) {
-            tmp /= static_cast<double>(N);
-            img_ifft.data[i] = tmp;
+            ifft_out[i] /= N;
+            img_ifft.data[i] = static_cast<double>(ifft_out[i]);
         }
 
         fft_shift(img_ifft);
 
-        auto circ = cv::Mat(height * 2, width * 2, CV_8UC3, cv::Scalar(0, 0, 0));
+        auto circ = cv::Mat(height, width, CV_8UC3, cv::Scalar(0, 0, 0));
 
         double minVal; 
         double maxVal; 
@@ -111,18 +111,13 @@ int main() {
         std::cout << "(" << dx << ", " << dy << ")\n";
         std::cout << "With value: " << maxVal << "\n";
         //the distance of dx point from the center
-        dx = std::abs(dx - (short int)height/2);
-        dy = std::abs(dy - (short int) width/2);
+        dx = (dx - (height/2));
+        dy = (dy - (width /2));
+        std::cout << "After...:\n";
+        std::cout << "(" << dx << ", " << dy << ")\n";
+        std::cout << "With value: " << maxVal << "\n";
 
-        for (auto i = dy; i < height + dy; i++) {
-            for (auto j = dx; j < width + dx; j++) {
-                circ.at<cv::Vec3b>(i, j)[0] = (short int)frame.at<cv::Vec3b>(i - dy, j - dx)[0];
-                circ.at<cv::Vec3b>(i, j)[1] = (short int)frame.at<cv::Vec3b>(i - dy, j - dx)[1];
-                circ.at<cv::Vec3b>(i, j)[2] = (short int)frame.at<cv::Vec3b>(i - dy, j - dx)[2];
-                // std::cout << "all good in: (" << i << ", " << j << ")\n";
-            }
-        }
-        std::cout << "good2\n";
+        circ_shift(circ, frame, dx, dy);
         writer << circ;
 
         fftw_free(fft_in);

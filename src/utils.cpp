@@ -41,3 +41,22 @@ void fft_shift(cv::Mat& img_ifft) {
     q2.copyTo(q1);
     tmp.copyTo(q2);
 }
+
+
+void circ_shift(cv::Mat out, const cv::Mat in, int xshift, int yshift){ 
+    for (int i = 0; i < height; i++) {
+
+        int ii = (i + xshift) % height;
+        if ( ii < 0 ) ii = height + ii;
+   
+        for (int j = 0; j < width; j++) {
+            int jj = (j + yshift) % width;
+            if ( jj < 0 ) jj = width + jj;
+
+            out.at<cv::Vec3b>(ii, jj)[0] = in.at<cv::Vec3b>(i, j)[0];
+            out.at<cv::Vec3b>(ii, jj)[1] = in.at<cv::Vec3b>(i, j)[1];
+            out.at<cv::Vec3b>(ii, jj)[2] = in.at<cv::Vec3b>(i, j)[2];
+
+   }
+ }
+}
