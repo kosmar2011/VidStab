@@ -49,6 +49,7 @@ int main() {
     fftw_destroy_plan(plan_f);
 
     conj(fft0, fft0_conj);
+    auto p = fft0_conj;
 
     fftw_free(fft_in);
     fftw_free(fft0);
@@ -81,15 +82,21 @@ int main() {
         //RUN FORWARD FFT COMPUTATION
         fftw_execute(plan_f);   
 
-        auto p = fft0_conj;
+        // auto p = fft0_conj;
+
         cross_power_spectrum(p, fft_out, ph_cor);
+        // for (uint32_t i = 0; i < N; i++) {
+        //     std::cout << ph_cor[i][0] << "   " << ph_cor[i][1] << "\n";
+        // }
+
 
         //RUN BACKWARD FFT COMPUTATION
         fftw_execute(plan_b);
 
-        auto img_ifft = cv::Mat(height, width, CV_32FC1);
+        auto img_ifft = cv::Mat(height, width, CV_64FC1);
         //normalize
         double tmp;
+
         for (uint32_t i = 0; i < N; i++) {
             ifft_out[i] /= N;
             img_ifft.data[i] = static_cast<double>(ifft_out[i]);
@@ -97,7 +104,7 @@ int main() {
 
         fft_shift(img_ifft);
 
-        auto circ = cv::Mat(height, width, CV_8UC3, cv::Scalar(0, 0, 0));
+        auto circ = cv::Mat(height, width, CV_8UC3);
 
         double minVal; 
         double maxVal; 
